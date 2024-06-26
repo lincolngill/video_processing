@@ -153,7 +153,7 @@ try {
         New-Item -ItemType Directory -Path $h
       }
       #ffmpeg -i $tf -map 0:0 -map 0:1 -map 0:1 -vf scale=1920x1080 -c:v libx264 -profile:v high -level:v 4.1 -c:a:0 aac -ac 2 -c:a:1 copy $row.Mp4Path
-      ffmpeg -i $tf -map 0:0 -map 0:1 -map 0:1 -vf scale=1920x1080 -c:v libx264 -crf 20 -preset slow -c:a:0 aac -ac 2 -c:a:1 copy $row.Mp4Path
+      ffmpeg -i $tf -map 0:0 -map 0:1 -map 0:1 -vf scale=1920x1080 -c:v libx264 -crf 21 -preset slow -c:a:0 aac -ac 2 -c:a:1 copy $row.Mp4Path
       if ($LASTEXITCODE -ne 0) {
         $row.Status = 120 + $LASTEXITCODE
         continue
