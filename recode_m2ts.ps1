@@ -119,11 +119,12 @@ try {
     if ($row.Status -gt 0) {
       continue
     }
-    if ($limit-- -eq 0) {
+    if (${Limit} -le 0) {
       Write-Warning "Exitiing early. Limit reached."
       $alldone = $false
       break
     }
+    --$Limit
     if (Test-Path -Path $row.Mp4Path -PathType Leaf) {
       Write-Error "Recoded mp4 already exists: $($row.Mp4Path)"
       $row.Status = 101
@@ -142,7 +143,7 @@ try {
       $row.Status = 103
       continue
     }
-    Write-Host "Getting $done: $rf ..."
+    Write-Host "Getting ${done}: $rf ..."
     Get-SFTPItem -SessionId $sid -Path $rf -Destination $TmpDir
     try {
       $row.Status = 2 # Recode inprogress
@@ -152,7 +153,7 @@ try {
         New-Item -ItemType Directory -Path $h
       }
       #ffmpeg -i $tf -map 0:0 -map 0:1 -map 0:1 -vf scale=1920x1080 -c:v libx264 -profile:v high -level:v 4.1 -c:a:0 aac -ac 2 -c:a:1 copy $row.Mp4Path
-      ffmpeg -i $tf -map 0:0 -map 0:1 -map 0:1 -vf scale=1920x1080 -c:v libx264 -crf 22 -preset slow -c:a:0 aac -ac 2 -c:a:1 copy $row.Mp4Path
+      ffmpeg -i $tf -map 0:0 -map 0:1 -map 0:1 -vf scale=1920x1080 -c:v libx264 -crf 20 -preset slow -c:a:0 aac -ac 2 -c:a:1 copy $row.Mp4Path
       if ($LASTEXITCODE -ne 0) {
         $row.Status = 120 + $LASTEXITCODE
         continue
@@ -165,6 +166,7 @@ try {
     $row.Status = 50 # File Done
     $row.ConvertedDate = Get-Date -Format "dd/MM/yyyy HH:mm" | Out-String
     $done++
+    $db | ConvertTo-Json | Set-Content -Path $DbFile
   }
 } finally {
   Write-Host "Writing DB: $DbFile"
