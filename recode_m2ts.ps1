@@ -180,7 +180,7 @@ $db | Select-Object -First 20 | Format-Table
 
 if ($alldone) {
   $h = Get-Item -Path $DbFile
-  $newname = (Get-Item -Path $DbFile).BaseName+(Get-Date -Format 'ddMMyyyyHH:mm' | Out-String)+'.json'
+  $newname = (Get-Item -Path $DbFile).BaseName+(Get-Date -Format '_ddMMyyyy_HHmm')+'.json'
   Write-Host "All Done. Renaming DB: $DbFile to $newname"
   Rename-Item -Path $DbFile -NewName $newname
 }
