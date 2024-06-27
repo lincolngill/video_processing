@@ -1,4 +1,7 @@
-$DbFile = $(Join-Path -Path $PSScriptRoot -ChildPath "recode_m2ts.json")
+param(
+  [ValidateNotNullOrEmpty()]
+  [string]$DbFile = $(Join-Path -Path $PSScriptRoot -ChildPath "recode_m2ts.json")
+)
 
 Get-Content -Path $DbFile -Raw | ConvertFrom-Json | Group-Object -Property Status | ForEach-Object {
     [PSCustomObject]@{
